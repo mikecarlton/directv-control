@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<!--
+  Copyright (c) 2017 Mike Carlton
+  Released under terms of the MIT license:
+    http://www.opensource.org/licenses/mit-license
+-->
+
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>DirecTV Commands</title>
+
+    <script src="jquery.min.js"></script>
+    <script src="jquery.growl.js" type="text/javascript"></script>
+    <link href="jquery.growl.css" rel="stylesheet" type="text/css" />
+    <script src="directv.js"></script>
+
+    <style>
+      body {
+        margin: 20px;
+      }
+
+      .wrapper {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 120px);
+        grid-gap: 20px;
+        background-color: #fff;
+        color: #444;
+      }
+
+      .box {
+        cursor: pointer;
+        background-color: #444;
+        color: #fff;
+        border-radius: 5px;
+        padding: 20px;
+        font-size: 120%;
+      }
+    </style>
+
+    <script>
+      keys = {
+        'poweron':  'Power On',
+        'poweroff': 'Power Off',
+        'chanup':   'Channel Up',
+        'chandown': 'Channel Down',
+        'pause':    'Pause',
+        'play':     'Play',
+        'prev':     'Previous',
+        'guide':    'Guide',
+        'info':     'Info',
+        'menu':     'Menu',
+        'up':       'Up',
+        'down':     'Down',
+        'left':     'Left',
+        'right':    'Right',
+        'back':     'Back',
+        'exit':     'Exit',
+        'select':   'Select'
+      }
+
+      $(document).ready(function() {
+        $.each(keys, function(key, val) {
+          var $div = $('<div />', {
+                          id: key,
+                          'class': 'box',
+                          text: val,
+                          click: function(){ dotv(this) }
+                       })
+          $('#directv').append($div)
+        })
+      })
+    </script>
+  </head>
+  <body>
+
+  <div id='directv' class='wrapper'> </div>
+  <p>
+  <div id='directv2' class='wrapper'>
+    <input type='button' class='box' value="ESPN" onclick=tochannel(206)>
+    <input type='button' class='box' value="Channel:" onclick=enterchannel(this)>
+    <input id='channel' class='box' type='number' value='' width='5' min='1' max='9999'
+           style='background-color: #fff; color: #444'>
+  </div>
+
+  <div id='extra'>
+    <hr>
+    <table>
+      <tr>
+        <td>DirecTV DVR IP:&nbsp;
+             <!-- update with your set top IP address in field 'value' -->
+             <input id='ip' type='text' size='20'
+                    value='172.16.1.25' placeholder='172.16.1.25'></td>
+        <td>Port:&nbsp;<input id='port' value='8080' size='6' disabled='true'></td>
+        <td><a href='./DTV-MD-0359-DIRECTV-SHEF-Public-Beta-Command-Set-V1.1.H.pdf'>DirecTV Command Manual</td>
+      </tr>
+    </table>
+  </div>
+
+  </body>
+</html>
