@@ -18,17 +18,43 @@
     <style>
       body {
         margin: 20px;
-      }
-
-      .wrapper {
         display: grid;
-        grid-template-columns: repeat(auto-fill, 120px);
         grid-gap: 20px;
         background-color: #fff;
         color: #444;
       }
 
+      header,
+      footer {
+        grid-column: 1 / span 2;
+      }
+
+      .main-wrapper {
+        grid-row: 1 / span 2;
+        grid-column: 1;
+        display: grid;
+        grid-gap: 20px;
+        /* 3 equal sized columns */
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+
+      .channel-wrapper {
+        grid-row: 1;
+        grid-column: 2;
+        display: grid;
+        grid-gap: 20px;
+        /* 4 columns, sized to button contents */
+        grid-template-columns: max-content max-content max-content max-content;
+        align-self: start;
+      }
+
+      .select-channel-wrapper {
+        grid-row: 2;
+        grid-column: 2;
+      }
+
       .box {
+        text-align:center;
         cursor: pointer;
         background-color: #444;
         color: #fff;
@@ -39,51 +65,76 @@
     </style>
 
     <script>
-      keys = {
-        'poweron':  'Power On',
-        'poweroff': 'Power Off',
-        'chanup':   'Channel Up',
-        'chandown': 'Channel Down',
-        'pause':    'Pause',
-        'play':     'Play',
-        'prev':     'Previous',
-        'guide':    'Guide',
-        'info':     'Info',
-        'menu':     'Menu',
-        'up':       'Up',
-        'down':     'Down',
-        'left':     'Left',
-        'right':    'Right',
-        'back':     'Back',
-        'exit':     'Exit',
-        'select':   'Select'
-      }
+      remote = [
+        { command: 'chanup',   label: 'Channel Up',   row: 1, column: 1 },
+        { command: 'chandown', label: 'Channel Down', row: 2, column: 1 },
+
+        { command: 'poweron',  label: 'Power On',     row: 1, column: 3 },
+        { command: 'poweroff', label: 'Power Off',    row: 2, column: 3 },
+
+        { command: 'prev',     label: 'Previous',     row: 3, column: 1 },
+        { command: 'pause',    label: 'Pause',        row: 3, column: 2 },
+        { command: 'play',     label: 'Play',         row: 3, column: 3 },
+
+        { command: 'guide',    label: 'Guide',        row: 4, column: 1 },
+        { command: 'info',     label: 'Info',         row: 4, column: 2 },
+
+        { command: 'menu',     label: 'Menu',         row: 5, column: 1 },
+        { command: 'back',     label: 'Back',         row: 5, column: 2 },
+        { command: 'exit',     label: 'Exit',         row: 5, column: 3 },
+
+        { command: 'up',       label: 'Up',           row: 6, column: 2 },
+        { command: 'left',     label: 'Left',         row: 7, column: 1 },
+        { command: 'select',   label: 'Select',       row: 7, column: 2 },
+        { command: 'right',    label: 'Right',        row: 7, column: 3 },
+        { command: 'down',     label: 'Down',         row: 8, column: 2 },
+      ]
+
+      channels = [
+        { name: 'KTVU', channel: 2 },
+        { name: 'KQED', channel: 9 },
+        { name: 'ESPN', channel: 206 },
+        { name: 'Cooking', channel: 231 },
+        { name: 'CNN', channel: 202 },
+      ]
 
       $(document).ready(function() {
-        $.each(keys, function(key, val) {
-          var $div = $('<div />', {
-                          id: key,
+        $.each(remote, function(key, val) {
+          var $div = $('<div/>', {
+                          id: val['command'],
                           'class': 'box',
-                          text: val,
-                          click: function(){ dotv(this) }
+                          style: 'grid-row:' + val['row'] + '; grid-column:' + val['column'],
+                          text: val['label'],
+                          click: function() { dotv(this) }
                        })
-          $('#directv').append($div)
+          $('#remote-buttons').append($div)
+        })
+
+        $.each(channels, function(key, val) {
+          var $div = $('<div/>', {
+                          id: val['channel'],
+                          'class': 'box',
+                          text: val['name'],
+                          click: function() { gotochannel(this) }
+                       })
+          $('#channel-buttons').append($div)
         })
       })
     </script>
   </head>
   <body>
 
-  <div id='directv' class='wrapper'> </div>
-  <p>
-  <div id='directv2' class='wrapper'>
-    <input type='button' class='box' value="ESPN" onclick=tochannel(206)>
+  <div id='remote-buttons' class='main-wrapper'> </div>
+  <div id='channel-buttons' class='channel-wrapper'> </div>
+  <div class='select-channel-wrapper'>
     <input type='button' class='box' value="Channel:" onclick=enterchannel(this)>
     <input id='channel' class='box' type='number' value='' width='5' min='1' max='9999'
            style='background-color: #fff; color: #444'>
   </div>
 
-  <div id='extra'>
+  <p>
+
+  <footer>
     <hr>
     <table>
       <tr>
@@ -95,7 +146,7 @@
         <td><a href='./DTV-MD-0359-DIRECTV-SHEF-Public-Beta-Command-Set-V1.1.H.pdf'>DirecTV Command Manual</td>
       </tr>
     </table>
-  </div>
+  </footer>
 
   </body>
 </html>
